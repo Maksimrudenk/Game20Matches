@@ -3,52 +3,44 @@ package org.example;
 import java.util.Scanner;
 
 public class GameState {
-    int MatchesNumber;
+    int matchesNumber;
+    boolean whoseTurn = false;
     Scanner scanner = new Scanner(System.in);
     Player player2;
     Player player1;
+    Player mainPlayer;
+    MatchCounter mCount;
 
         void startGame(){
             System.out.println("Start Game");
-            MatchesNumber = 20;
+            mCount = new MatchCounter();
+            mCount.set(20);
             createPlayers();
-            while (true){
-                this.MatchesNumber = player1.play( MatchesNumber);
-                if (MatchesNumber <= 1){
+            while(true){
+                if (mainPlayer.play()){
                     break;
                 }
-                this.MatchesNumber = player2.play( MatchesNumber);
-                if (MatchesNumber <= 1) {
-                    break;
-                }
+                whoseTurn = !whoseTurn;
+                mainPlayer = whoseTurn ? player1 : player2;
             }
         }
 
         void createPlayers(){
-            System.out.println("who goes first?");
-            if (order()){
-                createPlayers();
-            }
+            player1 = new Human(scanner, mCount);
+            player2 = new Computer(mCount);
+            inputOrder();
+
         }
 
-        boolean order(){
+        void inputOrder(){
+            System.out.println("who goes first?");
             System.out.println("Write 1 if you are starting   Write 2 if computer");
-            switch (scanner.nextInt()) {
-                case 1 -> {
-                    player1 = new Human(scanner);
-                    player2 = new Computer();
-                    return false;
-                }
-                case 2 -> {
-                    player2 = new Human(scanner);
-                    player1 = new Computer();
-                    return false;
-                }
-                default -> {
-                    System.out.println("invalid value");
-                    return true;
-                }
-            }
+            whoseTurn = scanner.nextInt() == 1;
+            order();
+        };
+
+        void order(){
+            mainPlayer = whoseTurn ? player1 : player2;
         }
 
 }

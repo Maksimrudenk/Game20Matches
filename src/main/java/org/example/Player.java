@@ -3,8 +3,7 @@ package org.example;
 import java.util.Scanner;
 
 public interface Player {
+    boolean play();
 
-    int play(int MatchesNumber);
-
-    void winCheck(int number);
+    void makeTurn();
 }
